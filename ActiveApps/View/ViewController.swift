@@ -15,6 +15,7 @@ class ViewController: NSViewController {
     private let viewModel: ViewModel = ViewModelImplementation()
     private let tapSubject = PassthroughSubject<Void, Never>()
     private var cancellables = [AnyCancellable]()
+    // TODO: DiffableDataSource instead of list in ViewController
     private var runningApplications = [ApplicationRecord]()
     
     override func viewDidLoad() {
