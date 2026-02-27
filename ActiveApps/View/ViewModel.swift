@@ -22,8 +22,9 @@ protocol ViewModel {
 final class ViewModelImplementation: ViewModel {
 
     private var cancellables = [AnyCancellable]()
-    // TODO: UseCase for observing data instead of repository in ViewModel
-    private let repository: RunningAppRepository = RunningAppRepositoryImplementation()
+    private let observeRunningAppsUseCase = ObserveRunningAppsUseCaseImplementation(
+        repository: RunningAppRepositoryImplementation()
+    )
     
     func configure(_ input: Input) -> Output {
         input.saveDataPublisher
@@ -33,7 +34,7 @@ final class ViewModelImplementation: ViewModel {
             .store(in: &cancellables)
         
         return Output(
-            runningApplicationsPublisher: repository.observeRunningApps()
+            runningApplicationsPublisher: observeRunningAppsUseCase.execute()
         )
     }
 }

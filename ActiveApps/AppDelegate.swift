@@ -10,8 +10,39 @@ import Cocoa
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    func applicationDidFinishLaunching(_ aNotification: Notification) {
-     
+    var statusBarItem: NSStatusItem?
+    var menu: NSMenu?
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        // Создаём меню
+        menu = NSMenu()
+        menu?.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+        menu?.addItem(NSMenuItem(title: "Open main window", action: #selector(showMainWindow), keyEquivalent: ""))
+        
+        // Создаём элемент в статус-баре
+        statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        if let button = statusBarItem?.button {
+            button.title = "⚡" // или установите image
+            button.action = nil // можно добавить клик, если нужно
+        }
+
+        // Настройка меню
+        statusBarItem?.menu = menu
+
+        // Скрываем меню-бар приложения (если не нужен)
+        NSApp.setActivationPolicy(.accessory)
+
+        // Скрываем Dock-иконку (опционально)
+        // NSApp.setActivationPolicy(.prohibited)
+    }
+    
+    @objc func showMainWindow() {
+        let storyboard = NSStoryboard(name: "Main", bundle: nil)
+        if let initialWindowController = storyboard.instantiateController(
+            withIdentifier: "WindowController"
+        ) as? NSWindowController {
+            initialWindowController.showWindow(nil)
+        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
